@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<script src="./ife31data.js"></script>
+		<title>index</title>
+		<style>
+			table{
+				width: 500px;
+			}
+		</style>
+	</head>
+	<body onload="load()">
+		<div id="region-radio-wrapper"></div>
+		<div id="product-radio-wrapper"></div>
+		<table border="1"></table>
+		<script>
+			load = function() {
+				gen_checkbox(rrw,regions)
+				gen_checkbox(prw,products)
+				table_drawing()
+			}
+
+			function table_init() {
+				let table_title = `<tr><th>${Colomn1_title}</th><th>${Colomn2_title}</th>`
+				for (let i=0;i<12;i++) {
+					table_title += `<th>${Month_name[i]}</th>`
+				}
+				table_title += `</tr>`
+				table.innerHTML = table_title
+			}
+
+			let Colomn1_title = 'Products'
+			let Colomn2_title = 'Regions'
+			let colomn1 = 'product'
+			let colomn2 = 'region'
+
+			const Month_name = ['Jan.','Feb.','Mar.','Apr.','May.','Jun.','Jul.','Aug.','Sept.','Oct.','Nov.','Dec.']
+
+			let table =document.getElementsByTagName('table')[0]
+			let rrw = document.getElementById('region-radio-wrapper')
+			let prw = document.getElementById('product-radio-wrapper')
+			
+			let products = []
+			let regions = []
+
+			let products_checked = {}
+			let regions_checked = {}
+
+			for (item of sourceData) {
+				let flag_p = true
+				let flag_r = true
+				for (ps of products) {
+					if (ps == item.product)
+						flag_p = false
+				}
+				for (rs of regions) {
+					if (rs == item.region)
+						flag_r = false
+				}
+				if (flag_p) products.push(item.product)
+				if (flag_r) regions.push(item.region)
+			}
+			
+			regions_checked = {}
+			for (let i=0;i<regions.length;i++){
+				regions_checked[regions[i]] = true
+			}
+			products_checked = {}
+			for (let i=0;i<products.length;i++){
+				products_checked[products[i]] = true
+			}
+
+
+			function gen_checkbox(wrapper,data_arr) {
+				//生成全选checkbox
+				wrapper.innerHTML = ''
+				wrapper.innerHTML += '<input type="checkbox" checked=true data-checkbox_type="all">全选'
+				
+				//遍历生成checkbox
+				for (item of data_arr) {
+					wrapper.innerHTML += `<input type="checkbox" checked=true data-checkbox_type="sub" value=${item}>${item}`
+				}
+
+				let c = wrapper.getElementsByTagName('input')
+				for (let i=0;i<c.length;i++) {
+					if (c[i].dataset.checkbox_type == 'all') {
+						c[i].onchange = function() {
+							pickall(wrapper,i)
+						}
+					}
+					else
+						c[i].onchange = function() {
+							fliter(wrapper,i)
+						}
+				}
+			}
+
+			function pickall(wrap,pos) {
+				let c = wrap.children
+				for (i in c)
+					c[i].checked = true
+				fliter(wrap,pos)
+			}
+			
+			let region_num = 0
+			let product_num = 0
+
+			function fliter(wrap,pos) {
+				let c = wrap.children
+				let flag_all = false
+				let flag_none = false
+				
+				if (wrap == rrw) {
+					region_num = 0
+					for (let i=1;i<c.length;i++){
+						if (c[i].checked == true)
+							region_num += 1
+					}
+					if (region_num == 0)
+						c[pos].checked = true
+					if (region_num== c.length-1)
+						c[0].checked = true
+					else
+						c[0].checked = false
+
+					for (let i=1;i<c.length;i++)
+						regions_checked[c[i].value] = c[i].checked
+				}
+				if (wrap == prw) {
+					product_num = 0
+					for (let i=1;i<c.length;i++){
+						if (c[i].checked == true)
+							product_num += 1
+					}
+					if (product_num == 0)
+						c[pos].checked = true
+					if (product_num== c.length-1)
+						c[0].checked = true
+					else
+						c[0].checked = false
+
+					for (let i=1;i<c.length;i++){
+						products_checked[c[i].value] = c[i].checked
+					}
+					
+				}
+				console.log(regions_checked)
+				console.log(products_checked)
+				console.log('-')
+				table_drawing()
+			}
+
+			let show_data = []
+
+			function data_receving() {
+				show_data = []
+				for (item of sourceData){
+					if (regions_checked[item.region] == true && products_checked[item.product] == true)
+						show_data.push(item)
+				}
+			}
+
+			function table_drawing() {
+				data_receving()
+				console.log(show_data)
+				table_display()
+			}
+
+			function table_display() {
+
+				if (region_num == 1 && product_num > 1) {
+					Colomn1_title = 'Regions'
+					Colomn2_title = 'Products'
+					colomn1 = 'region'
+					colomn2 = 'product'
+				} else {
+					Colomn1_title = 'Products'
+					Colomn2_title = 'Regions'
+					colomn1 = 'product'
+					colomn2 = 'region'
+				}
+				table_init()
+				let colomn1_num = []
+				let count = 1
+				let colomn1_tmp = show_data[0][colomn1]
+				let show_str
+			
+				if (show_data.length == 1) {
+					colomn1_num = [1,0]
+				}
+				else {
+					for (let item=1;item<show_data.length;item++) {
+						if (show_data[item][colomn1] != colomn1_tmp) {
+							colomn1_num.push(count)
+							count = 1
+							colomn1_tmp = show_data[item][colomn1]
+						}
+						else if (item == show_data.length-1) {
+							colomn1_num.push(count+1)
+						}
+						else {
+							count ++ 
+						}
+					}
+				}
+				
+				show_str = ''
+				count = 1
+				for (let item=0;item<show_data.length;item++) {
+					if (count == 1) {
+						count ++
+						show_str += `<tr><th rowspan="${colomn1_num[0]}">${show_data[item][colomn1]}</th>`
+					}
+					else {
+						count ++
+						show_str += `<tr>`
+					}
+
+					show_str += `<td>${show_data[item][colomn2]}</td>`
+					for (sale of show_data[item].sale) {
+						show_str += `<td>${sale}</td>`
+					}
+
+					if (count == colomn1_num[0]+1) {
+						count = 1
+						show_str += `</tr>`
+						table.innerHTML += show_str
+						show_str = ''
+					}
+				}
+			}
+		</script>
+	</body>
+</html>
