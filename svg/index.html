@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>svg</title>
+		<script src="./svg.js"></script>
+	</head>
+	<body>
+		<svg id="main" xmlns="http://www.w3.org/2000/svg" version="1.1"></svg>
+	
+		<script>
+			let main = document.getElementById('main')
+			let data = [80, 70, 90, 110, 130, 145, 150, 160, 170, 185, 190, 200]
+			let month = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sept','Oct','Nov','Dec']
+			let obj = {
+				data: data,
+				name: month
+			}
+			draw(main,obj)
+		</script>
+	</body>
+</html>

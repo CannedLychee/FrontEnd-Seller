@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title>canvas</title>
+	</head>
+	<body onload="load()">
+		<canvas id="canvas_demo" width="1000" height="1000">
+			112233
+		</canvas>
+		<script>
+			function load() {
+				let cv = document.getElementById('canvas_demo')
+				if (cv.getContext) {	//用来检查支持性
+					let ctx = cv.getContext('2d')
+					let rect1 = new Path2D()
+					let rect2 = new Path2D()
+					rect1.rect(100,100,500,500)
+					rect2.rect(150,150,500,500)
+					ctx.fillStyle='rgb(0,0,200,0.5)'
+					ctx.fill(rect1)
+					ctx.fillStyle='rgb(0,200,200,0.5)'
+					ctx.fill(rect2)
+					//支持canvas的代码
+				}
+				else {
+					//不支持canvas的代码
+				}
+			}
+		</script>
+	</body>
+</html>

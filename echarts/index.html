@@ -10,22 +10,12 @@
 			}
 		</style>
 		<script src="./echarts.js"></script>
-		<script src="./svg.js"></script>
 	</head>
 	<body onload="load()">
-		<div style="display: flex;flex-direction: row;">
-			<div id="column1">
-				<div id="region-radio-wrapper"></div>
-				<div id="product-radio-wrapper"></div>
-				<table border="1"></table>
-				<div id='echartsMain' style="width:800px;height:300px;" :key="refresh"></div>
-			</div>
-			<div id="column2">
-				<div id="btns">btns:</div>
-				<svg id='main' xmlns="http://www.w3.org/2000/svg" version="1.1">main</svg>
-			</div>
-		</div>
-		
+		<div id="region-radio-wrapper"></div>
+		<div id="product-radio-wrapper"></div>
+		<table border="1"></table>
+		<div id='echartsMain' style="width:1600px;height:400px;" :key="refresh"></div>
 		<script>
 			load = function() {
 				gen_checkbox(rrw,regions)
@@ -35,7 +25,7 @@
 
 			function table_init() {
 				let table_title = `<tr><th>${Colomn1_title}</th><th>${Colomn2_title}</th>`
-				for (let i=1;i<=12;i++) {
+				for (let i=0;i<12;i++) {
 					table_title += `<th>${Month_name[i]}</th>`
 				}
 				table_title += `</tr>`
@@ -189,6 +179,7 @@
 			}
 
 			function table_display() {
+
 				if (region_num == 1 && product_num > 1) {
 					Colomn1_title = 'Regions'
 					Colomn2_title = 'Products'
@@ -228,29 +219,14 @@
 				
 				show_str = ''
 				count = 1
-				let main = document.getElementById('main')
-				let btns = document.getElementById('btns')
-				
-				btns.innerHTML = ''
 				for (let item=0;item<show_data.length;item++) {
-					let obj = {
-						'data':show_data[item].sale,
-						'name':Month_name
-					}
-					let btn = document.createElement('BUTTON')
-					btn.innerHTML = show_data[item][colomn1] + show_data[item][colomn2]
-					btn.onclick = function() {
-						main.innerHTML = ''
-						draw(main,obj)
-					}
-					btns.appendChild(btn)
-					show_str += '<tr>'
 					if (count == 1) {
 						count ++
-						show_str += `<th rowspan="${colomn1_num[0]}">${show_data[item][colomn1]}</th>`
+						show_str += `<tr><th rowspan="${colomn1_num[0]}">${show_data[item][colomn1]}</th>`
 					}
 					else {
 						count ++
+						show_str += `<tr>`
 					}
 
 					show_str += `<td>${show_data[item][colomn2]}</td>`
@@ -260,7 +236,7 @@
 
 					if (count == colomn1_num[0]+1) {
 						count = 1
-						show_str += `</div>`
+						show_str += `</tr>`
 						table.innerHTML += show_str
 						show_str = ''
 					}
@@ -269,6 +245,7 @@
 
 			let refresh=0
 			function display_charts(s_data) {
+				
 				refresh = (refresh+1)%3
 				let mychart = echarts.init(document.getElementById('echartsMain'))
 				let colors=["#003366", "#006699", "#4cabce", "#e5323e","#003366", "#006699", "#4cabce", "#e5323e","#003366"]
@@ -298,7 +275,6 @@
 				mychart.clear()
 				mychart.setOption(option)
 			}
-			
 		</script>
 	</body>
 </html>

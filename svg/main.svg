@@ -1,0 +1,14 @@
+<?xml version="1.0" standalone="no"?>
+<!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd">
+<svg width="700" height="400" version="1.1" xmlns="http://www.w3.org/2000/svg">
+<g>
+	<polyline points="50,50 50,350 650,350" style="fill:transparent;stroke:#444444;stroke-width:2"/>
+	<!-- 坐标轴 -->
+	<polyline points="47,56 50,50 53,56" style="fill:transparent;stroke:#444444;stroke-width:2"/>
+	<!-- y箭头 -->
+	<polyline points="644,347 650,350 644,353" style="fill:transparent;stroke:#444444;;stroke-width:2"/>
+	<!-- x箭头 -->
+
+</g>
+	
+</svg>
